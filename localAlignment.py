@@ -41,7 +41,7 @@ for x in range(1, w):
 			matrixBTP[y][x] = 'D'
 			
 			
-		if fieldMax < m: 	#temporary maximum in A
+		if fieldMax <= m: 	#temporary maximum in A
 			fieldMax = m
 			fieldMaxX = x
 			fieldMaxY = y
@@ -58,38 +58,27 @@ for y in range(0, h):
 		print(matrixA[y][x], end = '\t')
 	print()
 
-direction = 'D' #how I got here
+#direction = 'D' #how I got here
 result1 = []
 result2 = []
 #best local alignment from maximum in matrix with back-tracking pointers
-while True:
+while matrixA[fieldMaxY][fieldMaxX] != 0:
 
-	if 	matrixA[fieldMaxY][fieldMaxX] == 0: #exit from while
-		break
-		
-	if direction == ' ':
-		print('error, the direction how I got here is NONE')
-		break
-	elif direction == 'U':
-		result1 = ['-'] + result1
-		result2 = [second[fieldMaxY]] + result2
-	elif direction == 'L':
-		result1 = [first[fieldMaxX]] + result1
-		result2 = ['-'] + result2
-	else:								
-		result1 = [first[fieldMaxX]] + result1
-		result2 = [second[fieldMaxY]] + result2
-	
-	direction = matrixBTP[fieldMaxY][fieldMaxX] #to next position in matrix
-	
+	direction = matrixBTP[fieldMaxY][fieldMaxX] #to next position in matrix	
 	if direction == ' ':
 		print('error, this shouldn\'t have accured')
 		break
 	elif direction == 'U':
+		result1 = ['-'] + result1
+		result2 = [second[fieldMaxY]] + result2
 		fieldMaxY -= 1
 	elif direction == 'L':
+		result1 = [first[fieldMaxX]] + result1
+		result2 = ['-'] + result2
 		fieldMaxX -= 1
-	else:								
+	else:
+		result1 = [first[fieldMaxX]] + result1
+		result2 = [second[fieldMaxY]] + result2
 		fieldMaxX -= 1
 		fieldMaxY -= 1
 	
