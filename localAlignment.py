@@ -1,6 +1,6 @@
 
-gepS = -1; #gep score
-def matchS(char1, char2): #score if match or mismatch 
+gepS = -1 #gep score
+def matchS(char1, char2): #score if match or mismatch
 	if char1 == char2:
 		return 1 
 	else: 
@@ -81,8 +81,8 @@ while matrixA[fieldMaxY][fieldMaxX] != 0:
 		result2 = [second[fieldMaxY]] + result2
 		fieldMaxX -= 1
 		fieldMaxY -= 1
-	
-	
+
+
 print('\nBest local alignment from maximum in matrix with back-tracking: ')
 print(result1)
 print(result2)
