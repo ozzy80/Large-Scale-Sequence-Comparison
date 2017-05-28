@@ -1,0 +1,56 @@
+\chapter{Materijali}
+
+\subsection{Biranje sekvenci: Dnk ili protein}
+Poređenje dve sekvence se može raditi na nivou nukleotida ili na nivou proteina. Poređenje na nivou proteina može pomoći u otkrivanju važnih bioloških informacija. Takođe, mnoge mutacije u DNK se ne odražavaju na nivou proteina i ne dovode do bilo kakve promene u odgovarajućoj amino kiselini. Shodno tome, za daleke odnose između organizama sa malom identičnošću sekvence na nivou DNK, poređenje proteina je bolje.
+
+
+\subsection{Poređenje parova i matrica skora}
+Postoje različiti metodi koji se koriste za poravnanje. Ovi metodi uključuju analizu dot matrica, korišćenje dinamičkog programiranja i heruistički pristup.
+
+\begin{enumerate}
+\item Analiza dot matrice: Ovo je jedan od najpopularnijih grafičkih metoda za poravnanje sekvenci. Sekvence se stavljaju na X I Y osu matrice, a zatim se prolazi kroz matricu i dodaje tačka svaki put kada se naiđe na podudaranje između sekvenci. Na ovaj način tačke koje se nalaze grupisane na dijagonali signaliziraju poravnanje, dok one koje su izolovane ukazuju na slučajna poklapanja. Ovo nam lako otkriva pristup homologe sekvence i ponavljanja. Mana dot matrica je što nam daju samo grafičku reprezentaciju i ne otkrivaju nam koliko su zaista slične sekvence.
+\end{enumerate} \vspace{5mm}
+
+Zbog gore pomenute mane dot matrica drugi metodi su razvijeni za bodovanje svakog para poravnate sekvence. Jedan od takvih metoda je zasnovan na dinamičkom programiranju. Optimalno poravnanje dve sekvence se dobija razbijanjem poravnanja na manje delove i onda spajanje ovih malih poravnanja u maniru sekvence. Dinamičko programiranje identifikuje poravnanje sa najvećim skorom. Podatci se čuvaju u matricama 20x20 za amino kiseline i 4x4 za nukleotide. Ove matrice služe kao evolutivni model i koriste se za računanje zamene jedne u odnosu na drugu amino kiselinu. Brojne matrice skora su dostupne i njihov odabir je važan jer on utiče na dobijeni rezultat.
+
+\subsection{PAM MATRICA}
+Margaret Dayhoff je predložila matrice zasnovane na zameni obrazca u grupi proteina. Dayhoff i kolege su uporedili sekvence blisko povezanih proteina u porodicama koje dele više od 85\% sličnosti. Na osnovu dobijenih rezultaka konstruisali su tabelu koja ukazuje na učestalost zamene amino kiseline na jednoj poziciji kojom je definisana relativna mutacija amino kiseline. Kako su proteinske sekvence koje su korišćene vrlo blisko povezane, bilo je očekivano da posmatrane mutacije neće uticati na funkciju proteina. Ove matrice se nazivaju PAM matrice.
+
+Zamena jedne amino kiselike drugom sa sličnim biohemiskim osobinama je ponekad prihvatljivo u proteinu. Ove zamene su poznate kao konzervatine zamene. Na primer zamena serina sa treoninom. Manje prihvatljive su one zamene koje imaju neku strukturunu ili funkcionalnu ulogu proteina i njihova zamena može imati štetne efekte. 
+
+Dayhoff i kolege su definisale matricu PAM1 koja proizvodi 1 dozvoljenu mutaciju na 100 amino kiselinskih ostataka. Po konvenciji PAM0 je matrica identiteta (nema dozvoljenih mutacija).  Pošto je PAM1 zasnovana na blisko povezanim proteinskim sekvencama koje imaju više od 85\% identiteta sekvence, njegova upotreba je ograničena. Zato postoje druge vrste PAM matrica izvedene iz PAM1 matirce množenjem matrice sa samom sobom. Recimo PAM250 matrica znači da se PAM1 mnozi 250 puta sama sa sobom i onda se koristi za proteine koji dele 20% sličnosti sekvence. 
+
+Izbor PAM matrice zavisi od srodnosti proteinske sekvence. Ako je sekvenca blisko povezana koristi se niža vrednost PAM matrice i obrnuto. Problem sa PAM matricama je što su zasnovane na malom broju proteinskih sekvenci dostupnih 1978. Sa povećanjem broja sekvenci potrebno je ažuriranje PAM matrica. Takodje ova matrica podrazumeva da svako mesto ima istu mutabilnost. Uprkos svim ovim ograničenjima ove matrice su i danas u upotrebi. 
+
+
+\subsection{BLOSUM}
+Koristeći nešto drugačiji pristup S. Henikoff I J.G. Henikoff su osmislili drugačiji tip bodovanja matrica koji opisuju nedostatke u PAM matrici. Pristup je zasnovan na korišćenju BLOCKS baze podataka koja se sastoji od velikog broja višestrukih lokalnih poravnanja daleko povezanih proteina. Glavni cilj je bio da se zameni PAM matrica pomoću mnogo većeg skupa podataka. Blokovi predstavljaju poravnanja bez praznina. Henikoff-i su ispitali oko 2000 blokova koji predstavljau više od 500 grupa povezanih proteina. Zamenili su one grupe proteina koje imaju sličnost višu od praga kod jednog predstavnika ili prosečne težine. Prag do 62\% (BLOSUM62) se najčešće korisit i on predstavlja podrazumevanu matricu skora za BLAST pretragu.
+
+U BLOSUM matrice su time direktno izračunate evolucione razdaljine i bazirane su na očuvanju regije. Ovo čini BLOSUM matrice osetljivije samim tim i pogodnije od PAM matrica za lokalna poravnanja. Kao i kod PAM matrice BLOSUM predstavlja broj koji označava stepen konzervacije proteina sekvence koje su korišćenje za izvođenje tog konkretnog BLOSUM-a.
+
+
+\section{Globalno i Lokalno poravnanje}
+U ovom poglavlju posmatramo vrste poravnanja i algoritme koji upravljaju ovim poravnanjima. Postoje dva glavna tipa poravnanja: lokalna i globalna. Globalna poravnanja su ona poravnanja koja se poravnavaju celom svojom dužinom. Ovo znači da oba kraja svake sekvence učestvuju u usklađivanju bez obzira na pogotke, promašaje i praznine, sto povlači dosta praznina pa je preporučljivo da se korisit kod sekvenci približno iste dužine i visoke sličnosti. Nekad se dešava da sekvence mogu biti slične samo u nekim regionima. Ako je ovo slučaj globalno poravnanje ovako definisano može preskočiti te regione, pa zbog toga uvodimo lokalno poravnanje. Lokalno poravnanje pretraga traži regione visoke sličnosti bez obzira na dužinu sekvence.
+
+
+\subsection{Needleman i Wunsch Algoritam: Globalno poravnanje sekvenci}
+Saul Needleman i Christian Wunsch su 1970 predstavili jedan od važnijih algoritama za usklađivanje dve sekvence proteina. Ovaj algoritam su kasnije poboljšali Seller i Gotoh. Algoritam teži da proizvede optimalna poravnanja dve sekvence tako što uvodi praznine. Algoritam se sastoji od 3 koraka: 
+
+\begin{enumerate}
+\item Pravljenje matrice:  Dve sekvence se postavljaju u matricu prva vertiklano (po Y osi), druga horizontalno (po X osi). Ako su sekvence identične na dijagonali matrice će se naći idealno poravnanje počevši od donjeg desnog ugla idući ka gornjem levom. Praznine su predstavljene horizontalnom ili vertikalnom ivicom.
+\item Ocenjivanje matrice: Neka imamo dve sekvence dužina a i b. Matrica skora će biti dimenzija a+1 x b+1. U levi gornji ugao matrice dodajemo vrednost 0. Zatim u prvu kolonu i prvu vrstu matrice dodajemo vrednosti kazne za prazninu. Kada smo popunili prvu vrstu i prvu kolonu popunjavamo ostatak matrice. Za svaku ćeliju u matrici vrednost je maksimum vrednosti iz ćelije dijagonalno iznad („+/-“ pogodak/promašaj), ćelije direktno iznad („-“ kazna za poravnanje) i ćelije levo („-“ kazna za poravnanje).   
+\item Identifikovanje optimalnog poravnanja: Kada smo popunili matricu trebamo odrediti optimalno poravnanje. Najlakši način je proces praćenja unazad. Krenemo od donjeg desnog ugla i određujemo iz koje ćelije se dobio naš rezultat. Zatim uzimamo tu ćeliju i ponavljamo postupak. Put koji dobijemo odgovara optimalnom poravnanju. Nekad možemo dobiti da je rezultat došao iz dve ili tri ćelije i onda dobijamo višestruka optimalna poravnanja. Dalje nastavljamo tako što vršimo praćenje unazad iz svake od tih ćelija.  
+
+\end{enumerate} \vspace{5mm}
+
+\subsection{Smith i Waterman Algoritam: Lokalno poravnanje sekvenci}
+Smith i Waterman algoritam se koristi da nađe regione lokalne sličnost i teži da poravna samo delove dve sekvence bez uvođenja praznina. Konstrukcija matrice je slična kao i kod Needleman i Wunsch algoritma, ali se sistemi za ocenjivanje matrice malo razlikuju.  Algoritam se sastoji od tri koraka:
+
+\begin{enumerate}
+\item Pravljenje matrice: Isti kao i kod Needleman i Wunsch algoritma.
+\item 2. Ocenjivanje matrice: Neka imamo dve sekvence dužina a i b. Matrica skora će biti dimenzija a+1 x b+1. U prvu kolonu i prvu vrstu matrice dodajemo vrednosti 0. Zatim kao i kod globalnog poravnanja, za svaku ćeliju u matrici vrednost je maksimum vrednosti iz ćelije dijagonalno iznad („+/-“ pogodak/promašaj), ćelije direktno iznad („-“ kazna za poravnanje) i čelije levo („-“ kazna za poravnanje). Ali za razliku od globalnog ako je maksimum negativan stavljamo 0 u ćeliju.   
+\item Identifikovanje optimalnog poravnanja: Kada smo popunili matricu trebamo odrediti optimalno poravnanje. Najlakši način i ovde je proces praćenja unazad. Počinjemo od najveće vrednosti u matrici, a zatim je procedura ista kao i kod globalnog poravnanja samo što se ne zaustavljamo u gornjem levom uglu nego kad dođemo do 0. Ova ćelija označava početak poravnanja.  
+
+\end{enumerate} \vspace{5mm}
+
+Ova dva algoritma nalaze optimalno poravnanje ili poravnanja ali su poprilično spora.  Ako imamo dve sekvence dužine a i b složenost je O(axb). Ovo je neefikasno kada poredimo neke sekvence sa sa celom bazom. Zato se danas koriste heruistički pristupi. Glavni algoritmi koji upotrebaljavaju heruistički pristup su FASTA I BLAST. Oni su bazirani na lokalnom poravnanju ali rade značajno brže. U sledećem poglavlju opisujemo ove algoritme.
